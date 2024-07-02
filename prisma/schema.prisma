@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Church {
+  id              String          @id @default(uuid())
+  name            String
+  bio             String?
+  profilePicUrl   String?
+  churchPictures  ChurchPicture[]
+  email           String          @unique
+  phone           String?
+  address         String?
+  missions        Mission[]       @relation("ChurchMissions")
+  missionaries    Missionary[]    @relation("ChurchMissionaries")
+  adminId         String          @unique
+  admin           ChurchAdmin?    @relation("ChurchToAdmin", fields: [adminId], references: [id])
+}
+
+model ChurchAdmin {
+  id       String   @id @default(uuid())
+  name     String
+  email    String   @unique
+  password String
+  contact  String?
+  churchId String?
+  church   Church?  @relation("ChurchToAdmin")
+}
+
+
+
+model Mission {
+  id            String       @id @default(uuid())
+  name          String
+  description   String?
+  donationInfo  String?
+  missionaryId  String
+  missionary    Missionary   @relation(fields: [missionaryId], references: [id])
+  churchId      String
+  church        Church       @relation("ChurchMissions", fields: [churchId], references: [id])
+}
+
+model Missionary {
+  id            String            @id @default(uuid())
+  name          String
+  bio           String?
+  avatar        String?
+  pictures      MissionaryPicture[]
+  email         String            @unique
+  password      String
+  contact       String?
+  donationInfo  String?
+  churchId      String?
+  church        Church?           @relation("ChurchMissionaries", fields: [churchId], references: [id])
+  missions      Mission[]
+}
+
+model MissionaryPicture {
+  id            String       @id @default(uuid())
+  url           String
+  missionaryId  String
+  missionary    Missionary   @relation(fields: [missionaryId], references: [id])
+}
+
+model ChurchPicture {
+  id         String   @id @default(uuid())
+  url        String
+  churchId   String
+  church     Church   @relation(fields: [churchId], references: [id])
+}
+
