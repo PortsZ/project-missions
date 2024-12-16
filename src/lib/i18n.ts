@@ -12,7 +12,7 @@ i18n
     fallbackLng: 'en',
     debug: true, // Set to false in production
     interpolation: {
-      escapeValue: false, // React already safes from XSS
+      escapeValue: false, 
     },
     // // optional: load `./public/locales/en/translation.json` for the default namespace
     backend: {
